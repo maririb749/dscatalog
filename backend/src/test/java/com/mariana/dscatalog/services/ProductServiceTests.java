@@ -12,10 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.mariana.dscatalog.dto.ProductDTO;
 import com.mariana.dscatalog.entities.Product;
 import com.mariana.dscatalog.repositories.ProductRepository;
 import com.mariana.dscatalog.services.exceptions.DatabaseException;
@@ -65,6 +68,18 @@ public class ProductServiceTests {
 		Mockito.when(repository.existsById(existingId)).thenReturn(true);
 		Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);
 		Mockito.when(repository.existsById(dependentId)).thenReturn(true);
+	}
+	
+	@Test
+	public void findAllPagedShouldReturnPage() {
+		
+		Pageable peageble = PageRequest.of(0, 10);
+		
+		Page<ProductDTO> result = service.findAllPaged(peageble);
+		
+		Assertions.assertNotNull(result);
+		Mockito.verify(repository).findAll(peageble);
+		
 	}
 	
 	@Test
