@@ -76,6 +76,9 @@ public class ProductService {
 	}
 
 	public void delete(Long id) {
+		if(!repository.existsById(id)) {
+			throw new ResouceNotFoundException("resource not found");
+		}
 		try {
 	        repository.deleteById(id);    		
 		}
@@ -83,6 +86,9 @@ public class ProductService {
 	        	throw new DatabaseException("Integrity violation");
 	   	}
 	}
+	
+	
+
 	
 	private void copyDtoToEntity(ProductDTO dto, Product entity) {
 		
