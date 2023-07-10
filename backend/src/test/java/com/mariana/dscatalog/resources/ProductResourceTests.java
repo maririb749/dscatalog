@@ -135,13 +135,7 @@ public class ProductResourceTests {
 
 	@Test
 	public void updateShowldReturnNotFoundWhenIdDoesNotExisist() throws Exception {
-String jsonBody = objectMapper.writeValueAsString(productDTO);   
-		
-		ResultActions result = 
-				mockMvc.perform(put("/products/{id}", existingId)
-						.content(jsonBody)
-						.contentType(MediaType.APPLICATION_JSON)
-						.accept(MediaType.APPLICATION_JSON));
+String jsonBody = objectMapper.writeValueAsString(productDTO);
 		
 		
 	}
