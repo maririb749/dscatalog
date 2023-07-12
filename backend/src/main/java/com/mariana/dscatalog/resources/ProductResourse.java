@@ -19,6 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.mariana.dscatalog.dto.ProductDTO;
 import com.mariana.dscatalog.services.ProductService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/products")
 public class ProductResourse {
@@ -40,7 +42,7 @@ public class ProductResourse {
 	
  }
 	@PostMapping
-	public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto){
+	public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto){
 		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(dto.getId()).toUri();
@@ -49,7 +51,7 @@ public class ProductResourse {
 		
 	}
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO dto){
+	public ResponseEntity<ProductDTO> update(@Valid @PathVariable Long id, @RequestBody ProductDTO dto){
 		dto = service.update(id, dto);
 		return ResponseEntity.ok().body(dto);
 		
