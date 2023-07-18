@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerMapping;
 
-import com.mariana.dscatalog.dto.UserInsertDTO;
 import com.mariana.dscatalog.dto.UserUpdateDTO;
 import com.mariana.dscatalog.entities.User;
 import com.mariana.dscatalog.repositories.UserRepository;
