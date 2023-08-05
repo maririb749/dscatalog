@@ -111,7 +111,7 @@ public class ProductService {
 	@Transactional(readOnly = true)
 	public Page<ProductProjection> testQuery(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return repository.serchProducts(Arrays.asList(1L, 3L), "", pageable);
+		return repository.serchProducts(Arrays.asList(), "", pageable);
 	}
 
 		
