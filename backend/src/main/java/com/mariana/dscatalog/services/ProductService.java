@@ -1,5 +1,6 @@
 package com.mariana.dscatalog.services;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.mariana.dscatalog.dto.CategoryDTO;
 import com.mariana.dscatalog.dto.ProductDTO;
 import com.mariana.dscatalog.entities.Category;
 import com.mariana.dscatalog.entities.Product;
+import com.mariana.dscatalog.projections.ProductProjection;
 import com.mariana.dscatalog.repositories.CategoryRepository;
 import com.mariana.dscatalog.repositories.ProductRepository;
 import com.mariana.dscatalog.services.exceptions.DatabaseException;
@@ -104,6 +106,12 @@ public class ProductService {
 			entity.getCategories().add(category);
 		}
 		
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<ProductProjection> testQuery(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return repository.serchProducts(Arrays.asList(1L, 3L), "", pageable);
 	}
 
 		
