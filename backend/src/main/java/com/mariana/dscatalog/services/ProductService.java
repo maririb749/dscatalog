@@ -1,6 +1,7 @@
 package com.mariana.dscatalog.services;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,98 +24,90 @@ import com.mariana.dscatalog.services.exceptions.ResouceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
-
-
 @Service
 public class ProductService {
-	
+
 	@Autowired
 	private ProductRepository repository;
-	
+
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
+
 	@Transactional(readOnly = true)
-	public Page<ProductDTO> findAllPaged(Pageable pageable){
-	    Page<Product>list = repository.findAll(pageable);
-	    return list.map(x -> new ProductDTO(x));
-	    	
-	    }
-	
+	public Page<ProductDTO> findAllPaged(Pageable pageable) {
+		Page<Product> list = repository.findAll(pageable);
+		return list.map(x -> new ProductDTO(x));
+
+	}
+
 	@Transactional(readOnly = true)
 	public ProductDTO findById(Long id) {
 		Optional<Product> obj = repository.findById(id);
 		Product entity = obj.orElseThrow(() -> new ResouceNotFoundException("Entity not found"));
 		return new ProductDTO(entity, entity.getCategories());
-		
-		
+
 	}
-	
+
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product entity = new Product();
 		copyDtoToEntity(dto, entity);
 		entity = repository.save(entity);
 		return new ProductDTO(entity);
-		
+
 	}
-	
-	
 
 	@Transactional
-	public ProductDTO update(Long id,ProductDTO dto) {
+	public ProductDTO update(Long id, ProductDTO dto) {
 		try {
 			Product entity = repository.getReferenceById(id);
 			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);
 			return new ProductDTO(entity);
-		}
-		catch (EntityNotFoundException e ) {
+		} catch (EntityNotFoundException e) {
 			throw new ResouceNotFoundException("Id not foun" + id);
-			
+
 		}
-		
-		
+
 	}
-    @Transactional(propagation = Propagation.SUPPORTS)
+
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public void delete(Long id) {
-		if(!repository.existsById(id)) {
+		if (!repository.existsById(id)) {
 			throw new ResouceNotFoundException("resource not found");
 		}
 		try {
-	        repository.deleteById(id);    		
+			repository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException("Integrity violation");
 		}
-		catch (DataIntegrityViolationException e) {
-	        	throw new DatabaseException("Integrity violation");
-	   	}
 	}
-	
-	
 
-	
 	private void copyDtoToEntity(ProductDTO dto, Product entity) {
-		
+
 		entity.setName(dto.getName());
 		entity.setDescription(dto.getDescription());
 		entity.setDate(dto.getDate());
 		entity.setImgUrl(dto.getImgUrl());
 		entity.setPrice(dto.getPrice());
-		
+
 		entity.getCategories().clear();
-		for(CategoryDTO catDto : dto.getCategories()) {
+		for (CategoryDTO catDto : dto.getCategories()) {
 			Category category = categoryRepository.getReferenceById(catDto.getId());
 			entity.getCategories().add(category);
 		}
-		
+
 	}
-	
+
 	@Transactional(readOnly = true)
-	public Page<ProductProjection> testQuery(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return repository.serchProducts(Arrays.asList(), "", pageable);
+	public Page<ProductProjection> findAllPaged(String name, String categoryId, Pageable pageable) {
+
+		List<Long> categoryIds = Arrays.asList();
+		if (!"0".equals(categoryId)) {
+			categoryIds = Arrays.asList(categoryId.split(",")).stream().map(Long::parseLong).toList();
+		}
+
+		return repository.serchProducts(categoryIds, name, pageable);
 	}
 
-		
 }
-
-
