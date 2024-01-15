@@ -3,7 +3,7 @@ INSERT INTO tb_user (first_name, last_name, email, password) VALUES ('Maria', 'G
 INSERT INTO tb_user (first_name, last_name, email, password) VALUES ('Mariana', 'Ribeiro', 'maririb51@gmail.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG');
 
 
-maririb51@gmail.com
+
 
 INSERT INTO tb_role (authority) VALUES ('ROLE_OPERATOR');
 INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');
